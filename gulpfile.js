@@ -12,13 +12,15 @@ var merge = require('merge-stream'); //merge css files
 var SOURCEPATHS = {
 		sassSource: 'src/scss/*.scss',
 		htmlSource: 'src/html/*.html',
-		jsSource: 'src/js/*.js'
+		jsSource: 'src/js/*.js',
+		fontawesomeSource: 'node_modules/font-awesome/fonts/**'
 }
 
 var APPPATH = {
 		root: 'app',
 		css: 'app/css',
-		js: 'app/js'
+		js: 'app/js',
+		fonts : 'app/fonts'
 }
 
 //sass compiler
@@ -60,6 +62,12 @@ gulp.task('cleanJS', function(){
 		.pipe(clean());
 });
 
+//move fontawesome files to app
+gulp.task('fontawesome', function(){
+	gulp.src(SOURCEPATHS.fontawesomeSource)
+	.pipe(gulp.dest(APPPATH.fonts));
+});
+
 //browserSync
 gulp.task('serve', ['sass'], function(){
 	browserSync.init([APPPATH.css + '/*.css', APPPATH.root + '/*.html', APPPATH.js + '/*.js'], {
@@ -70,7 +78,7 @@ gulp.task('serve', ['sass'], function(){
 });
 
 //watch for changes
-gulp.task('watch', ['serve', 'sass', 'copyHTML', 'cleanHTML', 'copyJS', 'cleanJS'], function(){
+gulp.task('watch', ['serve', 'sass', 'copyHTML', 'cleanHTML', 'copyJS', 'cleanJS', 'fontawesome'], function(){
 	gulp.watch([SOURCEPATHS.sassSource], ['sass']);
 	gulp.watch([SOURCEPATHS.htmlSource], ['copyHTML']);
 	gulp.watch([SOURCEPATHS.jsSource], ['copyJS']);
