@@ -8,7 +8,8 @@ var clean = require('gulp-clean');
 //paths
 var SOURCEPATHS = {
 		sassSource: 'src/scss/*.scss',
-		htmlSource: 'src/html/*.html'
+		htmlSource: 'src/html/*.html',
+		jsSource: 'src/js/*.js'
 }
 
 var APPPATH = {
@@ -37,6 +38,18 @@ gulp.task('cleanHTML', function(){
 		.pipe(clean());
 });
 
+//copy js files to app
+gulp.task('copyJS', ['cleanJS'], function(){
+	gulp.src(SOURCEPATHS.jsSource)
+		.pipe(gulp.dest(APPPATH.js));
+});
+
+//cleane removed html files from app
+gulp.task('cleanJS', function(){
+	return gulp.src(APPPATH.js + '/*.js', {read: false, force: true})
+		.pipe(clean());
+});
+
 //browserSync
 gulp.task('serve', ['sass'], function(){
 	browserSync.init([APPPATH.css + '/*.css', APPPATH.root + '/*.html', APPPATH.js + '/*.js'], {
@@ -47,9 +60,10 @@ gulp.task('serve', ['sass'], function(){
 });
 
 //watch for changes
-gulp.task('watch', ['serve', 'sass', 'copyHTML', 'cleanHTML'], function(){
+gulp.task('watch', ['serve', 'sass', 'copyHTML', 'cleanHTML', 'copyJS', 'cleanJS'], function(){
 	gulp.watch([SOURCEPATHS.sassSource], ['sass']);
 	gulp.watch([SOURCEPATHS.htmlSource], ['copyHTML']);
+	gulp.watch([SOURCEPATHS.jsSource], ['copyJS']);
 });
 
 gulp.task('default', ['watch']);
