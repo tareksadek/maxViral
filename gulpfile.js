@@ -3,6 +3,7 @@ var sass = require('gulp-sass');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var autoprefixer = require('gulp-autoprefixer');
+var clean = require('gulp-clean');
 
 //paths
 var SOURCEPATHS = {
@@ -25,9 +26,15 @@ gulp.task('sass', function(){
 });
 
 //copy HTML files to app
-gulp.task('copyHTML', function(){
+gulp.task('copyHTML', ['cleanHTML'], function(){
 	gulp.src(SOURCEPATHS.htmlSource)
 		.pipe(gulp.dest(APPPATH.root));
+});
+
+//cleane removed html files from app
+gulp.task('cleanHTML', function(){
+	return gulp.src(APPPATH.root + '/*.html', {read: false, force: true})
+		.pipe(clean());
 });
 
 //browserSync
@@ -40,7 +47,7 @@ gulp.task('serve', ['sass'], function(){
 });
 
 //watch for changes
-gulp.task('watch', ['serve', 'sass', 'copyHTML'], function(){
+gulp.task('watch', ['serve', 'sass', 'copyHTML', 'cleanHTML'], function(){
 	gulp.watch([SOURCEPATHS.sassSource], ['sass']);
 	gulp.watch([SOURCEPATHS.htmlSource], ['copyHTML']);
 });
