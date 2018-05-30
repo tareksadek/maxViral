@@ -4,6 +4,7 @@ var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 var autoprefixer = require('gulp-autoprefixer');
 var clean = require('gulp-clean');
+var concat = require('gulp-concat');
 
 //paths
 var SOURCEPATHS = {
@@ -41,10 +42,11 @@ gulp.task('cleanHTML', function(){
 //copy js files to app
 gulp.task('copyJS', ['cleanJS'], function(){
 	gulp.src(SOURCEPATHS.jsSource)
+		.pipe(concat('main.js'))
 		.pipe(gulp.dest(APPPATH.js));
 });
 
-//cleane removed html files from app
+//cleane removed js files from app
 gulp.task('cleanJS', function(){
 	return gulp.src(APPPATH.js + '/*.js', {read: false, force: true})
 		.pipe(clean());
