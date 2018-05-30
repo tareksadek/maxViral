@@ -15,5 +15,9 @@
   "bugs": {
     "url": "https://github.com/tareksadek/maxViral/issues"
   },
-  "homepage": "https://github.com/tareksadek/maxViral#readme"
+  "homepage": "https://github.com/tareksadek/maxViral#readme",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-sass": "^4.0.1"
+  }
 }
