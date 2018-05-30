@@ -3,5 +3,10 @@ $white: #fff;
 
 body{
 	background-color:$black;
+}
+h1{
 	color:$white;
+}
+h1:hover{
+	transition: color 1s ease;
 }
