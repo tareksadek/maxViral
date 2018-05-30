@@ -1,10 +1,12 @@
 var gulp = require('gulp');
-var sass = require('gulp-sass');
-var browserSync = require('browser-sync');
+var sass = require('gulp-sass'); //sass to css
+var browserSync = require('browser-sync'); //server
 var reload = browserSync.reload;
-var autoprefixer = require('gulp-autoprefixer');
-var clean = require('gulp-clean');
-var concat = require('gulp-concat');
+var autoprefixer = require('gulp-autoprefixer'); //add cross browser css syntax
+var clean = require('gulp-clean'); //remove deleted files
+var concat = require('gulp-concat'); //merge files
+var browserify = require('gulp-browserify'); //module loader (eq requirejs)
+var merge = require('merge-stream'); //merge css files
 
 //paths
 var SOURCEPATHS = {
@@ -21,9 +23,14 @@ var APPPATH = {
 
 //sass compiler
 gulp.task('sass', function(){
-	return gulp.src('src/scss/app.scss')
+	var bootstrapCSS = gulp.src('./node_modules/bootstrap/dist/css/bootstrap.css');
+	var sassFiles;
+	
+	sassFiles = gulp.src(SOURCEPATHS.sassSource)
 		.pipe(autoprefixer('last 2 versions')) //adding cross browser css (-webkit-)
 		.pipe(sass({outputStyle: 'expanded'}).on('error', sass.logError))
+		return merge(bootstrapCSS, sassFiles) //merging sass and bootstrapfiles
+		.pipe(concat('app.css'))//concat all css files for the app
 		.pipe(gulp.dest(APPPATH.css));
 });
 
@@ -42,7 +49,8 @@ gulp.task('cleanHTML', function(){
 //copy js files to app
 gulp.task('copyJS', ['cleanJS'], function(){
 	gulp.src(SOURCEPATHS.jsSource)
-		.pipe(concat('main.js'))
+		.pipe(concat('main.js')) //combine js files in src to 1 file in app
+		.pipe(browserify()) //use browserify loader
 		.pipe(gulp.dest(APPPATH.js));
 });
 
